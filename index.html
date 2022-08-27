@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone</title>
+</head>
+
+<body>
+    <!-- 
+● Create a drone with HTML and CSS
+● Drone should be able to fly both vertically and horizontally and wings should rotate
+with proper animation as well.
+● Make the drone controllable by the arrow keys on the keyboard for movement on the
+screen (Should not fly out of the screen).
+● Add animation to the drone’s body based on logical inertia from the drone’s
+movement based on arrow keys. 
+-->
+    <style>
+        :root {
+            --background: #43faeb;
+            --background-gradient: linear-gradient(to right top, #5eeaef, #6de5d1, #84ebcb, #99f1e7, #aff7e4);
+            --rotation: 0;
+            --drone-color: #4e1b69;
+
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            background: var(--background-gradient);
+            
+        }
+        #root {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+
+        .drone {
+            position: absolute;
+            top: 10%;
+            margin-left: -50px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: black;
+            /* animation: lefttoright 8s infinite alternate linear; */
+            animation: bounce 3s infinite alternate linear;
+            z-index: 99;
+            /* center */
+            /* transform: translate(-50%, -50%); */
+            /* margin-left: auto; */
+            /* margin-right: auto; */
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+
+        }
+
+        .drone .camera {
+            position: absolute;
+            height: 30px;
+            width: 30px;
+            background-color: black;
+            border-radius: 50%;
+            left: 25px;
+            top: 10px;
+            z-index: 5;
+        }
+
+        .drone .camera::before {
+            position: absolute;
+            content: "";
+            height: 10px;
+            width: 150px;
+            background-color: var(--drone-color);
+            border-radius: 1rem;
+            top: 30px;
+            left: -60px;
+            z-index: 5;
+        }
+
+        .drone .camera::after {
+            position: absolute;
+            content: "";
+            height: 15px;
+            width: 15px;
+            background-color: var(--background);
+            border-radius: 50%;
+            top: 7.5px;
+            left: 7.5px;
+            z-index: 5;
+        }
+
+        .drone .wings {
+            position: absolute;
+            width: 200px;
+            height: 20px;
+            background-color: black;
+            border-radius: 1rem;
+            left: -60px;
+            top: 40px;
+        }
+
+        .drone .wings::before {
+            position: absolute;
+            content: "";
+            width: 10px;
+            height: 50px;
+            background-color: black;
+            border-radius: 1rem;
+            left: 50px;
+            top: 10px;
+            transform: rotate(30deg);
+        }
+
+        .drone .wings::after {
+            position: absolute;
+            content: "";
+            width: 10px;
+            height: 50px;
+            background-color: black;
+            border-radius: 1rem;
+            left: 144px;
+            top: 10px;
+            transform: rotate(-30deg);
+        }
+
+        .drone .leftspinner {
+            position: absolute;
+            left: -35px;
+            top: 20px;
+            height: 20px;
+            width: 15px;
+            background-color: black;
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .drone .leftspinner::before {
+            position: absolute;
+            content: "";
+            top: -10px;
+            left: 4px;
+            height: 20px;
+            width: 6px;
+            background-color: black;
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .drone .leftspinner::after {
+            position: absolute;
+            content: "";
+            top: -7.5px;
+            left: -22.5px;
+            height: 4px;
+            width: 60px;
+            background-color: black;
+            border-radius: 3rem;
+            animation: spinwing 1s infinite linear;
+        }
+
+        .drone .rightspinner {
+            position: absolute;
+            left: 100px;
+            top: 20px;
+            height: 20px;
+            width: 15px;
+            background-color: black;
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .drone .rightspinner::before {
+            position: absolute;
+            content: "";
+            top: -10px;
+            left: 4px;
+            height: 20px;
+            width: 6px;
+            background-color: black;
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .drone .rightspinner::after {
+            position: absolute;
+            content: "";
+            top: -7.5px;
+            left: -22.5px;
+            height: 4px;
+            width: 60px;
+            background-color: black;
+            border-radius: 3rem;
+            animation: spinwing 1s infinite linear;
+        }
+
+
+        .drone::before {
+            position: absolute;
+            content: "";
+            height: 40px;
+            width: 80px;
+            border-radius: 90px 90px 0 0;
+            background: var(--drone-color);
+        }
+
+        .drone::after {
+            position: absolute;
+            content: "";
+            top: -6px;
+            left: 10px;
+            height: 60px;
+            width: 60px;
+            background-color: var(--drone-color);
+            border-radius: 50%;
+        }
+        @keyframes spinwing{
+            to{transform: rotateY(0deg);}
+            from{transform: rotateY(720deg);}
+        }
+
+        @keyframes bounce {
+            100% {transform: translate(0px , -6px) rotate(var(--rotation));} 
+            0% { transform: translate(0px , -6px) rotate(var(--rotation));} 
+            50% {transform: translate(0px , 6px) rotate(var(--rotation));} 
+        }
+    </style>
+
+    <div id="root">
+        <div class="drone">
+            <div class="wings"></div>
+            <div class="leftspinner"></div>
+            <div class="camera"></div>
+            <div class="rightspinner"></div>
+        </div>
+    </div>
+
+    <script>
+        const drone = document.querySelector('.drone');
+        drone.style.top = '50%';
+        drone.style.left = '50%';
+        // setup keyboard events to control the drone
+        document.addEventListener('keydown', (e) => {
+            console.log(e.keyCode);
+            switch (e.key) {
+                case 'ArrowUp':
+                case 'w':
+                    console.log(parseInt(drone.style.top))
+                    if(parseInt(drone.style.top) > 5){
+                        drone.style.top = (parseInt(drone.style.top) - 1) + '%'
+                    }
+                    break;
+                case 'ArrowDown':
+                    case 's':
+                        console.log(parseInt(drone.style.top))
+                        if(parseInt(drone.style.top) < 85){
+                        drone.style.top = (parseInt(drone.style.top) + 1) + '%'
+                        }
+                break;
+                case 'ArrowLeft':
+                case 'a':
+                    if(parseInt(drone.style.left) > 5){
+                        drone.style.left = (parseInt(drone.style.left) - 1) + '%'
+                        // set --rotation to -15deg
+                        drone.style.setProperty('--rotation', '-15deg');
+
+                    }
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                    if(parseInt(drone.style.left) < 95){
+                        drone.style.left = (parseInt(drone.style.left) + 1) + '%'
+                        // set --rotation to 15deg
+                        drone.style.setProperty('--rotation', '15deg');
+                        // drone.style.transform += 'rotate(15deg)'
+                    }
+                    break;
+                case ' ':
+
+                    break;
+            }
+        });
+        document.addEventListener('keyup', (e) => {
+            drone.style.setProperty('--rotation', '0deg');
+            // drone.style.transform += 'rotate(0deg)'
+        });
+
+    </script>
+
+</body>
+
+</html>
